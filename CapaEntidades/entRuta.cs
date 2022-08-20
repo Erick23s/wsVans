@@ -11,8 +11,8 @@ namespace CapaEntidades
         public int idRuta { get; set; }
         public string nombre { get; set; }
         public string descripcion { get; set; }
-        public DateTime horaSalida { get; set; }
-        public DateTime horaLlegada { get; set; }
+        public string horaSalida { get; set; }
+        public string horaLlegada { get; set; }
         public bool bActivo { get; set; }
     }
 }

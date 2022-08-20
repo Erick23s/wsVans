@@ -38,5 +38,45 @@ namespace CapaNegocios
             return datPasajero.ConsultaPasajero(idPasajero);
         }
 
+        public  List<entPasajero> ListaPasajero ()
+        {
+            string jSonEnviar = "";
+            List<entPasajero> lstPasajero = new List<entPasajero>();
+            //List<entTipoPasajero> lstTipoPasajero = new List<entTipoPasajero>();
+
+            //int idPasajero = sidPasajero == "" ? 0 : Convert.ToInt32(sidPasajero);
+
+
+            try
+            {
+
+
+                negPasajero negPasajero = new negPasajero();
+                negTipoPasajero negtipopasajero = new negTipoPasajero();
+                DataTable dtPasajero =  negPasajero.MuestraPasajero();
+                lstPasajero = (from DataRow dr in dtPasajero.Rows
+                               select new entPasajero()
+                               {
+                                   idPasajero = Convert.ToInt32(dr["idPasajero"]),
+                                   nombre = dr["nombre"].ToString(),
+                                   apellido = dr["apellido"].ToString(),
+                                   telefono = dr["telefono"].ToString(),
+                                   idTipoPasajero = Convert.ToInt32(dr["idTipoPasajero"])
+                                   // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
+                               }).ToList();
+               
+            
+            }
+
+            catch (Exception ex)
+            {
+            
+
+
+            }
+            return lstPasajero;
+
+        }
+
     }
 }

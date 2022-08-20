@@ -37,5 +37,39 @@ namespace CapaNegocios
 
             return datVehiculo.ConsultaVehiculo(idVehiculo);
         }
+
+        public  List<entVehiculo> ListaVehiculo ()
+        {
+            string jSonEnviar = "";
+            List<entVehiculo> lstVehiculo = new List<entVehiculo>();
+            try
+            {
+                negVehiculo negVehiculo = new negVehiculo();
+                DataTable dtVehiculo = negVehiculo.MuestraVehiculo();
+                lstVehiculo = (from DataRow dr in dtVehiculo.Rows
+                               select new entVehiculo()
+                               {
+                                   idVehiculo = Convert.ToInt32(dr["idVehiculo"]),
+                                   matricula = dr["matricula"].ToString(),
+                                   modelo = dr["modelo"].ToString(),
+                                   marca = dr["marca"].ToString(),
+                                   capacidad = Convert.ToInt32(dr["capacidad"]),
+                                   descripcion = dr["descrìpcion"].ToString()
+                                   // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
+                               }).ToList();
+           
+            }
+
+            catch (Exception ex)
+            {
+                
+
+
+
+            }
+            return lstVehiculo;
+         
+
+        }
     }
 }

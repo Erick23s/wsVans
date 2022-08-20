@@ -37,5 +37,54 @@ namespace CapaNegocios
 
             return datTipoPasajero.ConsultaTipoPasajero(idTipoPasajero);
         }
+
+
+        public List<entTipoPasajero> ListaTipoPasajero(/*string sidTipoPasajero*/)
+        {
+            string jSonEnviar = "";
+            List<entTipoPasajero> lstTipoPasajero = new List<entTipoPasajero>();
+            //int idTipoPasajero = sidTipoPasajero == "" ? 0 : Convert.ToInt32(sidTipoPasajero);
+            try
+            {
+
+                negTipoPasajero negTipoPasajero = new negTipoPasajero();
+                DataTable dtTipoPasajero = negTipoPasajero.MuestraTipoPasajero();
+                lstTipoPasajero = (from DataRow dr in dtTipoPasajero.Rows
+                                   select new entTipoPasajero()
+                                   {
+                                       idTipoPasajero = Convert.ToInt32(dr["idTipoPasajero"]),
+                                       nombre = dr["nombre"].ToString(),
+                                       bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
+                                   }).ToList();
+
+                //JSON.Clear();
+                //JSON.Add("1Error", false);
+                //JSON.Add("cError", "");
+                //JSON.Add("LstTipoPasajero", lstTipoPasajero);
+                //jSonEnviar = new JavaScriptSerializer().Serialize(JSON);
+            }
+
+
+            catch (Exception ex)
+            {
+                //JSON.Clear();
+                //JSON.Add("1Error", true);
+                //JSON.Add("cError", ex.Message);
+                //JSON.Add("LstTipoPasajero", "");
+
+
+
+            }
+            return lstTipoPasajero;
+            //jSonEnviar = new JavaScriptSerializer().Serialize(JSON);
+            //Context.Response.Clear();
+            //Context.Response.Write(jSonEnviar);
+            //Context.Response.Flush();
+            //Context.Response.End();
+
+        }
+
+       
+        
     }
 }

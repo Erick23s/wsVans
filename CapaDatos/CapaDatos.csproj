@@ -46,6 +46,7 @@
     <Compile Include="datConductor.cs" />
     <Compile Include="datReserva.cs" />
     <Compile Include="datRuta.cs" />
+    <Compile Include="datStatusReserva.cs" />
     <Compile Include="datTipoPasajero.cs" />
     <Compile Include="datUsuario.cs" />
     <Compile Include="datVehiculo.cs" />

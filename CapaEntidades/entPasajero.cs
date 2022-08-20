@@ -12,7 +12,8 @@ namespace CapaEntidades
         public string nombre { get; set; }
         public string  apellido { get; set; }
         public string telefono { get; set; }
-        public string  idTipoPasajero { get; set; }
+        public int  idTipoPasajero { get; set; }
+        public string TipoPasajero { get; set; }
         public bool bActivo { get; set; }
 
     }

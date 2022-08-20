@@ -38,5 +38,39 @@ namespace CapaNegocios
 
             return datRuta.ConsultaRuta(idRuta);
         }
+
+        
+            public List<entRuta> ListaRuta()
+            {
+            string jSonEnviar = "";
+            List<entRuta> lstRuta = new List<entRuta>();
+            try
+            {
+                negRuta negRuta = new negRuta();
+                DataTable dtRuta = negRuta.MuestraRuta();
+                lstRuta = (from DataRow dr in dtRuta.Rows
+                           select new entRuta()
+                           {
+                               idRuta = Convert.ToInt32(dr["idRuta"]),
+                               nombre = dr["nombre"].ToString(),
+                               descripcion = dr["descripcion"].ToString(),
+                               horaSalida = dr["horaSalida"].ToString(),
+                               horaLlegada = dr["horaLlegada"].ToString()
+                               // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
+                           }).ToList();
+           
+            }
+
+            catch (Exception ex)
+            {
+               
+
+
+
+            }
+            return lstRuta;
+
+
+        }
     }
 }

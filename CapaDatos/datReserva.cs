@@ -16,9 +16,10 @@ namespace CapaDatos
             var comando = new SqlCommand("dbo.stpCreaReserva", Conexion.AbreConexion());
             comando.CommandType = System.Data.CommandType.StoredProcedure;
             comando.Parameters.AddWithValue("@IdRuta", entReserva.idRuta);
-            comando.Parameters.AddWithValue("@idvehiculo", entReserva.idvehiculo);
+            comando.Parameters.AddWithValue("@idPasajero", entReserva.idPasajero);
+            comando.Parameters.AddWithValue("@idVehiculo", entReserva.idVehiculo);
             comando.Parameters.AddWithValue("@Asiento", entReserva.Asiento);
-            comando.Parameters.AddWithValue("@horaReserva", entReserva.horaReserva);
+            //comando.Parameters.AddWithValue("@horaReserva", entReserva.horaReserva);
 
 
             try
@@ -73,10 +74,11 @@ namespace CapaDatos
             var comando = new SqlCommand("dbo.stpEditaReserva", Conexion.AbreConexion());
             comando.CommandType = System.Data.CommandType.StoredProcedure;
             comando.Parameters.AddWithValue("@idReserva", entReserva.idReserva);
+            comando.Parameters.AddWithValue("@idPasajero", entReserva.idPasajero);
             comando.Parameters.AddWithValue("@IdRuta", entReserva.idRuta);
-            comando.Parameters.AddWithValue("@idvehiculo", entReserva.idvehiculo);
+            comando.Parameters.AddWithValue("@idvehiculo", entReserva.idVehiculo);
             comando.Parameters.AddWithValue("@Asiento", entReserva.Asiento);
-            comando.Parameters.AddWithValue("@horaReserva", entReserva.horaReserva);
+            //comando.Parameters.AddWithValue("@horaReserva", entReserva.horaReserva);
             // comando.Parameters.AddWithValue("@bActivo", entReserva.bActivo);
 
 

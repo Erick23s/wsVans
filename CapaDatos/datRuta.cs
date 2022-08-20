@@ -14,7 +14,7 @@ namespace CapaDatos
         public string CreaRuta(entRuta entRuta)
         {
             string devRuta = "";
-            var comando = new SqlCommand("dbo.stpCreaRuta", Conexion.AbreConexion());
+            var comando = new SqlCommand("dbo.stpCreaRutas", Conexion.AbreConexion());
             comando.CommandType = System.Data.CommandType.StoredProcedure;
             comando.Parameters.AddWithValue("@nombre", entRuta.nombre);
             comando.Parameters.AddWithValue("@descripcion", entRuta.descripcion);
@@ -41,7 +41,7 @@ namespace CapaDatos
         public DataTable MuestraRuta()
         {
             DataTable dtRuta = new DataTable();
-            SqlCommand comando = new SqlCommand("dbo.stpMuestraRuta", Conexion.AbreConexion());
+            SqlCommand comando = new SqlCommand("dbo.stpMuestraRutas", Conexion.AbreConexion());
             comando.CommandType = System.Data.CommandType.StoredProcedure;
             SqlDataReader drRuta = comando.ExecuteReader();
             dtRuta.Load(drRuta);
@@ -52,7 +52,7 @@ namespace CapaDatos
         public string EliminaRuta(int idRuta)
         {
             string devRuta = "";
-            var comando = new SqlCommand("dbo.stpEliminaRuta", Conexion.AbreConexion());
+            var comando = new SqlCommand("dbo.stpEliminaRutas", Conexion.AbreConexion());
             comando.CommandType = System.Data.CommandType.StoredProcedure;
             comando.Parameters.AddWithValue("@idRuta", idRuta);
             try
@@ -71,7 +71,7 @@ namespace CapaDatos
         public string ModificaRuta(entRuta entRuta)
         {
             string devRuta = "";
-            var comando = new SqlCommand("dbo.stpEditaRuta", Conexion.AbreConexion());
+            var comando = new SqlCommand("dbo.stpEditaRutas", Conexion.AbreConexion());
             comando.CommandType = System.Data.CommandType.StoredProcedure;
             comando.Parameters.AddWithValue("@idRuta", entRuta.idRuta);
             comando.Parameters.AddWithValue("@nombre", entRuta.nombre);
@@ -100,7 +100,7 @@ namespace CapaDatos
         public DataTable ConsultaRuta(int idRuta)
         {
             DataTable dtRuta = new DataTable();
-            SqlCommand comando = new SqlCommand("dbo.stpConsultaRuta", Conexion.AbreConexion());
+            SqlCommand comando = new SqlCommand("dbo.stpConsultaRutas", Conexion.AbreConexion());
             comando.CommandType = System.Data.CommandType.StoredProcedure;
             comando.Parameters.AddWithValue("@idRuta", idRuta);
             SqlDataReader drRuta = comando.ExecuteReader();

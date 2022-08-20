@@ -147,7 +147,7 @@ namespace wsVans
 
             try
             {
-                int idConductor = sidConductor == "" ? 0 : Convert.ToInt32(sidConductor);
+                int idConductor = sidConductor == "" ? 0 : Convert.ToInt32(sidConductor); 
                 negConductor negConductor = new negConductor();
                 entConductor entConductor = new entConductor();
                 entConductor.idConductor = idConductor;
@@ -181,13 +181,17 @@ namespace wsVans
         {
             string jSonEnviar = "";
             List<entPasajero> lstPasajero = new List<entPasajero>();
+            List<entTipoPasajero> lstTipoPasajero = new List<entTipoPasajero>();
+
             int idPasajero = sidPasajero == "" ? 0 : Convert.ToInt32(sidPasajero);
 
 
             try
             {
-
+                
+                
                 negPasajero negPasajero = new negPasajero();
+                negTipoPasajero negtipopasajero = new negTipoPasajero();
                 DataTable dtPasajero = idPasajero != 0 ? negPasajero.ConsultaPasajero(idPasajero) : negPasajero.MuestraPasajero(); 
                 lstPasajero = (from DataRow dr in dtPasajero.Rows
                                select new entPasajero()
@@ -196,13 +200,17 @@ namespace wsVans
                                    nombre = dr["nombre"].ToString(),
                                    apellido = dr["apellido"].ToString(),
                                    telefono = dr["telefono"].ToString(),
-                                   idTipoPasajero = dr["idTipoPasajero"].ToString()
+                                   idTipoPasajero = Convert.ToInt32(dr["idTipoPasajero"]),
+                                   TipoPasajero = dr["TipoPasajero"].ToString()
+
                                    // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
                                }).ToList();
+                lstTipoPasajero = negtipopasajero.ListaTipoPasajero();
                 JSON.Clear();
                 JSON.Add("1Error", false);
                 JSON.Add("cError", "");
                 JSON.Add("LstPasajero", lstPasajero);
+                JSON.Add("LstTipoPasajero", lstTipoPasajero);
                 jSonEnviar = new JavaScriptSerializer().Serialize(JSON);
             }
 
@@ -212,7 +220,7 @@ namespace wsVans
                 JSON.Add("1Error", true);
                 JSON.Add("cError", ex.Message);
                 JSON.Add("LstPasajero", "");
-
+                JSON.Add("LstTipoPasajero", "");
 
 
             }
@@ -225,10 +233,11 @@ namespace wsVans
         }
 
         [WebMethod]
-        public void EliminaPasajero(int idPasajero)
+        public void EliminaPasajero(string  sidPasajero)
         {
             try
             {
+                int idPasajero=Convert.ToInt32(sidPasajero);
                 negPasajero negPasajero = new negPasajero();
                 string Eliminado = negPasajero.EliminaPasajero(idPasajero);
                 JSON.Clear();
@@ -267,7 +276,7 @@ namespace wsVans
                                    nombre = dr["nombre"].ToString(),
                                    apellido = dr["apellido"].ToString(),
                                    telefono = dr["telefono"].ToString(),
-                                   idTipoPasajero = dr["idTipoPasajero"].ToString()
+                                   idTipoPasajero = Convert.ToInt32(dr["idTipoPasajero"])
                                    // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
                                }).ToList();
                 JSON.Clear();
@@ -302,7 +311,7 @@ namespace wsVans
                 entPasajero.nombre = snombre;
                 entPasajero.apellido = sapellido;
                 entPasajero.telefono = stelefono;
-                entPasajero.idTipoPasajero = sidTipoPasajero;
+                entPasajero.idTipoPasajero = Convert.ToInt32(sidTipoPasajero);
 
 
                 string Guardado = idPasajero != 0 ? negPasajero.ModificaPasajero(entPasajero) : negPasajero.CreaPasajero(entPasajero);
@@ -327,29 +336,47 @@ namespace wsVans
 /*---------------------------------------Reserva-----------------------------------------------------------*/
 
         [WebMethod]
-        public void ListaReserva()
+        public void ListaReserva(string sidReserva)
         {
             string jSonEnviar = "";
             List<entReserva> lstReserva = new List<entReserva>();
+            List<entRuta> lstRuta = new List<entRuta>();
+            List<entPasajero> lstPasajero = new List<entPasajero>();
+            List<entVehiculo> lstVehiculo= new List<entVehiculo>();
+
             try
             {
+                int idReserva = sidReserva == "" ? 0 : Convert.ToInt32(sidReserva);
                 negReserva negReserva = new negReserva();
-                DataTable dtReserva = negReserva.MuestraReserva();
+                negRuta negruta = new negRuta();
+                negPasajero negpasajero = new negPasajero();
+                negVehiculo negvehiculo = new negVehiculo();
+                DataTable dtReserva = idReserva != 0 ? negReserva.ConsultaReserva(idReserva) : negReserva.MuestraReserva();
                 lstReserva = (from DataRow dr in dtReserva.Rows
                               select new entReserva()
                               {
                                   idReserva = Convert.ToInt32(dr["idReserva"]),
                                   idPasajero = Convert.ToInt32(dr["idPasajero"]),
                                   idRuta = Convert.ToInt32(dr["idRuta"]),
-                                  idvehiculo = Convert.ToInt32(dr["idvehiculo"]),
-                                  Asiento = Convert.ToInt32(dr["Asiento"]),
-                                  horaReserva = Convert.ToDateTime(dr["horaReserva"]),
-                                   bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
+                                  idVehiculo = Convert.ToInt32(dr["idVehiculo"]),
+                                  Pasajero = dr["Pasajero"].ToString(),
+                                  Ruta =  dr["Ruta"].ToString(),
+                                  Vehiculo = dr["Vehiculo"].ToString(),
+                                  Asiento = dr["Asiento"].ToString(),
+                                  horaReserva =dr["horaReserva"].ToString(),
+                                  horaModificacion = dr["horaModificacion"].ToString(),
+                                  bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
                               }).ToList();
+                lstRuta = negruta.ListaRuta();
+                lstPasajero = negpasajero.ListaPasajero();
+                lstVehiculo=negvehiculo.ListaVehiculo();
                 JSON.Clear();
                 JSON.Add("1Error", false);
                 JSON.Add("cError", "");
                 JSON.Add("LstReserva", lstReserva);
+                JSON.Add("LstRuta", lstRuta);
+                JSON.Add("LstPasajero", lstPasajero);
+                JSON.Add("LstVehiculo", lstVehiculo);
                 jSonEnviar = new JavaScriptSerializer().Serialize(JSON);
             }
 
@@ -359,8 +386,9 @@ namespace wsVans
                 JSON.Add("1Error", true);
                 JSON.Add("cError", ex.Message);
                 JSON.Add("LstReserva", "");
-
-
+                JSON.Add("LstRuta", "");
+                JSON.Add("LstPasajero", "");
+                JSON.Add("LstVehiculo", "");
 
             }
             jSonEnviar = new JavaScriptSerializer().Serialize(JSON);
@@ -402,9 +430,11 @@ namespace wsVans
         {
             string jSonEnviar = "";
             List<entReserva> lstReserva = new List<entReserva>();
+           // List<entPasajero> lstPasajero = new List<entPasajero>();
             try
             {
                 negReserva negReserva = new negReserva();
+               // negPasajero negpasajero
                 DataTable dtReserva = negReserva.ConsultaReserva(idReserva);
 
                 lstReserva = (from DataRow dr in dtReserva.Rows
@@ -413,10 +443,11 @@ namespace wsVans
                                   idReserva = Convert.ToInt32(dr["idReserva"]),
                                   idPasajero = Convert.ToInt32(dr["idPasajero"]),
                                   idRuta = Convert.ToInt32(dr["idRuta"]),
-                                  idvehiculo = Convert.ToInt32(dr["idvehiculo"]),
-                                  Asiento = Convert.ToInt32(dr["Asiento"]),
-                                  horaReserva = Convert.ToDateTime(dr["horaReserva"])
-                                  // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
+                                  idVehiculo = Convert.ToInt32(dr["idVehiculo"]),
+                                  Asiento = dr["Asiento"].ToString(),
+                                  horaReserva = dr["horaReserva"].ToString(),
+                                  horaModificacion = dr["horaModificacion"].ToString(),
+                                  bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
                               }).ToList();
                 JSON.Clear();
                 JSON.Add("lError", false);
@@ -438,20 +469,20 @@ namespace wsVans
             Context.Response.End();
         }
         [WebMethod]
-        public void GuardaReserva(string sidReserva, int sidpasajero, int sidruta, int sidvehiculo, int sasiento, DateTime shorareserva)
+        public void GuardaReserva(string sidreserva, string sidpasajero, string sidruta, string sidvehiculo, string sasiento)
         {
 
             try
             {
-                int idReserva = sidReserva == "" ? 0 : Convert.ToInt32(sidReserva);
+                int idReserva = sidreserva == "" ? 0 : Convert.ToInt32(sidreserva);
                 negReserva negReserva = new negReserva();
                 entReserva entReserva = new entReserva();
                 entReserva.idReserva = idReserva;
-                entReserva.idPasajero = sidpasajero;
-                entReserva.idRuta = sidruta;
-                entReserva.idvehiculo = sidvehiculo;
+                entReserva.idPasajero = Convert.ToInt32(sidpasajero);
+                entReserva.idRuta = Convert.ToInt32(sidruta);
+                entReserva.idVehiculo = Convert.ToInt32(sidvehiculo);
                 entReserva.Asiento = sasiento;
-                entReserva.horaReserva = shorareserva;
+               // entReserva.horaReserva = shorareserva;
 
 
                 string Guardado = idReserva != 0 ? negReserva.ModificaReserva(entReserva) : negReserva.CreaReserva(entReserva);
@@ -490,10 +521,10 @@ namespace wsVans
                            {
                                idRuta = Convert.ToInt32(dr["idRuta"]),
                                nombre = dr["nombre"].ToString(),
-                               descripcion = dr["apellido"].ToString(),
-                               horaSalida = Convert.ToDateTime(dr["horaSalida"]),
-                               horaLlegada = Convert.ToDateTime(dr["horaLlegada"])
-                               // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
+                               descripcion = dr["descripcion"].ToString(),
+                               horaSalida = dr["horaSalida"].ToString(),
+                               horaLlegada = dr["horaLlegada"].ToString(),
+                               bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
                            }).ToList();
                 JSON.Clear();
                 JSON.Add("1Error", false);
@@ -561,10 +592,9 @@ namespace wsVans
                            {
                                idRuta = Convert.ToInt32(dr["idRuta"]),
                                nombre = dr["nombre"].ToString(),
-                               descripcion = dr["apellido"].ToString(),
-                               horaSalida = Convert.ToDateTime(dr["horaSalida"]),
-                               horaLlegada = Convert.ToDateTime(dr["horaLlegada"])
-                               // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
+                               descripcion = dr["descripcion"].ToString(),
+                               horaSalida = dr["horaSalida"].ToString(),
+                               horaLlegada = dr["horaLlegada"].ToString()
                            }).ToList();
                 JSON.Clear();
                 JSON.Add("lError", false);
@@ -586,7 +616,7 @@ namespace wsVans
             Context.Response.End();
         }
         [WebMethod]
-        public void GuardaRuta(string sidRuta, string snombre, string sdescripcion, DateTime shorasalida, DateTime shorallegada)
+        public void GuardaRuta(string sidRuta, string snombre, string sdescripcion, string shorasalida, string shorallegada)
         {
 
             try
@@ -622,52 +652,56 @@ namespace wsVans
 
         /*---------------------------------------TipoPasajero-----------------------------------------------------------*/
 
+        //  [WebMethod]
+        //public List<entTipoPasajero> ListaTipoPasajero(/*string sidTipoPasajero*/)
+        //{
+        //    string jSonEnviar = "";
+        //    List<entTipoPasajero> lstTipoPasajero = new List<entTipoPasajero>();
+        //   //int idTipoPasajero = sidTipoPasajero == "" ? 0 : Convert.ToInt32(sidTipoPasajero);
+        //    try
+        //    {
+
+        //        negTipoPasajero negTipoPasajero = new negTipoPasajero();
+        //        DataTable dtTipoPasajero = negTipoPasajero.MuestraTipoPasajero();
+        //        lstTipoPasajero = (from DataRow dr in dtTipoPasajero.Rows
+        //                           select new entTipoPasajero()
+        //                           {
+        //                               idTipoPasajero = Convert.ToInt32(dr["idTipoPasajero"]),
+        //                               nombre = dr["nombre"].ToString()   ,                       
+        //                                bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
+        //                           }).ToList();
+
+        //        //JSON.Clear();
+        //        //JSON.Add("1Error", false);
+        //        //JSON.Add("cError", "");
+        //        //JSON.Add("LstTipoPasajero", lstTipoPasajero);
+        //        //jSonEnviar = new JavaScriptSerializer().Serialize(JSON);
+        //    }
+
+
+        //    catch (Exception ex)
+        //    {
+        //        //JSON.Clear();
+        //        //JSON.Add("1Error", true);
+        //        //JSON.Add("cError", ex.Message);
+        //        //JSON.Add("LstTipoPasajero", "");
+
+
+
+        //    }
+        //    return lstTipoPasajero;
+        //    //jSonEnviar = new JavaScriptSerializer().Serialize(JSON);
+        //    //Context.Response.Clear();
+        //    //Context.Response.Write(jSonEnviar);
+        //    //Context.Response.Flush();
+        //    //Context.Response.End();
+
+        //}
+
         [WebMethod]
-        public void ListaTipoPasajero(string sidTipoPasajero)
+        public void EliminaTipoPasajero(string sidTipoPasajero)
         {
-            string jSonEnviar = "";
-            List<entTipoPasajero> lstTipoPasajero = new List<entTipoPasajero>();
-            int idTipoPasajero = sidTipoPasajero == "" ? 0 : Convert.ToInt32(sidTipoPasajero);
-            try
-            {
-                negTipoPasajero negTipoPasajero = new negTipoPasajero();
-                DataTable dtTipoPasajero = idTipoPasajero != 0 ? negTipoPasajero.ConsultaTipoPasajero(idTipoPasajero) : negTipoPasajero.MuestraTipoPasajero();
-                lstTipoPasajero = (from DataRow dr in dtTipoPasajero.Rows
-                                   select new entTipoPasajero()
-                                   {
-                                       idTipoPasajero = Convert.ToInt32(dr["idTipoPasajero"]),
-                                       nombre = dr["nombre"].ToString()
-                                       
-                                       // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
-                                   }).ToList();
-                JSON.Clear();
-                JSON.Add("1Error", false);
-                JSON.Add("cError", "");
-                JSON.Add("LstTipoPasajero", lstTipoPasajero);
-                jSonEnviar = new JavaScriptSerializer().Serialize(JSON);
-            }
-
-            catch (Exception ex)
-            {
-                JSON.Clear();
-                JSON.Add("1Error", true);
-                JSON.Add("cError", ex.Message);
-                JSON.Add("LstTipoPasajero", "");
-
-
-
-            }
-            jSonEnviar = new JavaScriptSerializer().Serialize(JSON);
-            Context.Response.Clear();
-            Context.Response.Write(jSonEnviar);
-            Context.Response.Flush();
-            Context.Response.End();
-
-        }
-
-        [WebMethod]
-        public void EliminaTipoPasajero(int idTipoPasajero)
-        {
+            int idTipoPasajero = Convert.ToInt32(sidTipoPasajero);
             try
             {
                 negTipoPasajero negTipoPasajero = new negTipoPasajero();
@@ -923,12 +957,11 @@ namespace wsVans
                                select new entVehiculo()
                                {
                                    idVehiculo = Convert.ToInt32(dr["idVehiculo"]),
-                                   matricula = dr["apellido"].ToString(),
+                                   matricula = dr["matricula"].ToString(),
                                    modelo = dr["modelo"].ToString(),
                                    marca = dr["marca"].ToString(),
                                    capacidad = Convert.ToInt32(dr["capacidad"]),
-                                   descripcion = dr["descripcion"].ToString()
-
+                                   descripcion = dr["descrìpcion"].ToString()
                                    // bActivo = Convert.ToBoolean(dr["bActivo"].ToString())
                                }).ToList();
                 JSON.Clear();
